@@ -41,6 +41,20 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+// Middleware для обработки ошибок
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = 500; // Устанавливаем код состояния 500
+        context.Response.ContentType = "application/json";
+
+        var errorResponse = new { Message = "Произошла ошибка. Пожалуйста, попробуйте позже." };
+        await context.Response.WriteAsJsonAsync(errorResponse);
+    });
+});
+
+// Использование Swagger только в режиме разработки
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
