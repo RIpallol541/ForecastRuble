@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using Forecast.Domain.Dtos;
+using Forecast.Domain.Entities; 
 
-namespace Forecast.Application
+public class MappingProfile : Profile
 {
-    internal class MappingProfile
+    public MappingProfile()
     {
+        // Сопоставление между CurrencyRate и CurrencyRateDto
+        CreateMap<CurrencyRate, CurrencyRateDto>().ReverseMap();
+
+        // Сопоставление между Prediction и PredictionDto
+        CreateMap<Prediction, PredictionDto>().ReverseMap();
     }
 }
