@@ -2,6 +2,10 @@
 using Forecast.Domain.Repositories;
 using Forecast.Infarastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Forecast.Infarastructure.Repositories
 {
@@ -14,29 +18,34 @@ namespace Forecast.Infarastructure.Repositories
             _context = context;
         }
 
+        // Получение всех валютных курсов
         public async Task<IEnumerable<CurrencyRate>> GetAllAsync()
         {
             return await _context.CurrencyRates.Include(cr => cr.Predictions).ToListAsync();
         }
 
+        // Получение курса валюты по ID
         public async Task<CurrencyRate> GetCurrencyRateByIdAsync(Guid id)
         {
             return await _context.CurrencyRates.Include(cr => cr.Predictions)
                                                .FirstOrDefaultAsync(cr => cr.Id == id);
         }
 
+        // Добавление нового валютного курса
         public async Task AddCurrencyRateAsync(CurrencyRate currencyRate)
         {
             await _context.CurrencyRates.AddAsync(currencyRate);
             await _context.SaveChangesAsync();
         }
 
+        // Получение курса валюты по коду и дате
         public async Task<CurrencyRate> GetCurrencyRateAsync(string currencyCode, DateTime date)
         {
             return await _context.CurrencyRates
                 .FirstOrDefaultAsync(cr => cr.CurrencyCode == currencyCode && cr.Date == date);
         }
 
+        // Получение последнего курса валюты по коду
         public async Task<CurrencyRate> GetLatestCurrencyRateAsync(string currencyCode)
         {
             return await _context.CurrencyRates
@@ -45,13 +54,14 @@ namespace Forecast.Infarastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        // Обновление существующего курса валюты
         public async Task UpdateCurrencyRateAsync(CurrencyRate currencyRate)
         {
             var existingCurrencyRate = await GetCurrencyRateByIdAsync(currencyRate.Id);
 
             if (existingCurrencyRate != null)
             {
-                existingCurrencyRate.Rate = currencyRate.Rate;
+                existingCurrencyRate.Rate = currencyRate.Rate; // Обновляем курс
                 _context.CurrencyRates.Update(existingCurrencyRate);
                 await _context.SaveChangesAsync();
             }
@@ -61,7 +71,8 @@ namespace Forecast.Infarastructure.Repositories
             }
         }
 
-        public async Task DeleteAsync(Guid id)
+        // Удаление валютного курса по ID
+        public async Task DeleteCurrencyRateAsync(Guid id)
         {
             var currencyRate = await GetCurrencyRateByIdAsync(id);
             if (currencyRate != null)

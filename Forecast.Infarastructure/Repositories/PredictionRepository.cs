@@ -1,5 +1,5 @@
 ﻿using Forecast.Domain.Entities;
-using Forecast.Domain.Repositories;
+
 using Forecast.Infarastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -69,6 +69,16 @@ namespace Forecast.Infarastructure.Repositories
         }
 
         public Task UpdatePredictionAsync(Prediction prediction)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Prediction>> GetAllPredictionsAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeletePredictionAsync(Guid id)
         {
             throw new NotImplementedException();
         }
