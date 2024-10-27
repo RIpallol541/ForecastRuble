@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Forecast.Infrastructure.Data;
+using Forecast.Infarastructure.Data;
 
-namespace Forecast.Infrastructure.Extensions
+namespace Forecast.Infarastructure.Extensions
 {
     public static class ServiceCollectionExtensions
     {

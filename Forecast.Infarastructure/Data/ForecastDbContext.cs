@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Forecast.Domain.Entities;
 
-namespace Forecast.Infrastructure.Data
+namespace Forecast.Infarastructure.Data
 {
     public class ForecastDbContext : DbContext
     {
