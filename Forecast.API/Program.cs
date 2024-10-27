@@ -1,25 +1,57 @@
+using Microsoft.EntityFrameworkCore;
+using Forecast.Infrastructure.Data; // Подключение к вашему контексту базы данных
+using Forecast.Application.Services; // Подключение к вашим сервисам
+using Forecast.Domain.Repositories; // Подключение к репозиториям
+using Forecast.Infrastructure.Repositories; // Подключение к реализации репозиториев
+using Microsoft.OpenApi.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Получаем строку подключения из appsettings.json
+var connectionString = builder.Configuration.GetConnectionString("ForecastDb");
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Регистрация контекста базы данных через метод расширения для SQLite
+builder.Services.AddDbContext<ForecastDbContext>(options =>
+    options.UseSqlite(connectionString));
+
+// Регистрация репозиториев
+builder.Services.AddScoped<ICurrencyRateRepository, CurrencyRateRepository>();
+builder.Services.AddScoped<IPredictionRepository, PredictionRepository>();
+
+// Регистрация сервисов
+builder.Services.AddScoped<CurrencyRateService>();
+builder.Services.AddScoped<PredictionService>();
+
+// Настройка сериализации JSON
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+    });
+
+// Настройка AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+
+// Настройка Swagger
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Forecast API", Version = "v1" });
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Forecast API v1"));
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
-app.MapControllers();
+// Регистрация эндпоинтов
+CurrencyRateEndpoints.MapEndpoints(app);
+PredictionEndpoints.MapEndpoints(app);
 
 app.Run();

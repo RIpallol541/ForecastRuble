@@ -1,10 +1,10 @@
 ﻿using Forecast.Domain.Entities;
 
-using Forecast.Infarastructure.Data;
+using Forecast.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Forecast.Infarastructure.Repositories
+namespace Forecast.Infrastructure.Repositories
 {
     public class PredictionRepository : IPredictionRepository
     {

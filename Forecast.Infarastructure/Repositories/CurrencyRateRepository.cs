@@ -1,13 +1,13 @@
 ﻿using Forecast.Domain.Entities;
 using Forecast.Domain.Repositories;
-using Forecast.Infarastructure.Data;
+using Forecast.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Forecast.Infarastructure.Repositories
+namespace Forecast.Infrastructure.Repositories
 {
     public class CurrencyRateRepository : ICurrencyRateRepository
     {
